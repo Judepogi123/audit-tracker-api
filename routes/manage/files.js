@@ -18,7 +18,6 @@ const upload = multer({ storage: storage });
 router.post("/upload-profile", upload.single("file"), async (req, res) => {
   const file = req.file;
   const { username } = req.body;
-  console.log(username);
   if (!file && !username) {
     return res.status(400).send({ message: "No file uploaded" });
   }

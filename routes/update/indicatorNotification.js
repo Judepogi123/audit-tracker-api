@@ -1,6 +1,5 @@
 import express from "express";
 import { database, get, ref, set, push } from "../../../firebase/dbConfig.js";
-import { update } from "../../../firebase/dbConfig.js";
 
 const router = express.Router();
 

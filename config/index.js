@@ -52,7 +52,9 @@ const corsOptions = {
         }else{
             callback(new Error(`NOT allowed CORS!`))
         }
-    }
+    },
+    credential: true,
+    optionSuccessStatus:200
 }
 
 app.use(cors(corsOptions));

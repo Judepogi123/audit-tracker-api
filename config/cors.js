@@ -1,3 +1,3 @@
-const corsOptions = ["https://localhost:3000/", "http://localhost:5173/"];
+const corsList = ["https://audit-tracker-admin.onrender.com/"];
 
-export default corsOptions
+export default corsList

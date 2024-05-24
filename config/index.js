@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 //cors
-import corsOptions from "./cors.js";
+import corsList from "./cors.js";
 
 //routers
 import systemData from "../routes/system.js"
@@ -45,7 +45,17 @@ const port = process.env.NODE_PORT || 3000;
 
 const app = express();
 
-app.use(cors());
+const corsOptions = {
+    origin: (origin, callback)=>{
+        if(corsList.indexOf(origin) !== -1){
+            callback(null, true)
+        }else{
+            callback(new Error(`NOT allowed CORS!`))
+        }
+    }
+}
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

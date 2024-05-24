@@ -46,13 +46,7 @@ const port = process.env.NODE_PORT || 3000;
 const app = express();
 
 const corsOptions = {
-    origin: (origin, callback)=>{
-        if(corsList.indexOf(origin) !== -1){
-            callback(null, true)
-        }else{
-            callback(new Error(`NOT allowed CORS!`))
-        }
-    },
+    origin: "https://audit-tracker-admin.onrender.com/",
     credential: true,
     optionSuccessStatus:200
 }

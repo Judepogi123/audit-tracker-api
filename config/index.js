@@ -1,19 +1,16 @@
-import express from "express"
+import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
+import path from "path";
 
 dotenv.config();
 
-//cors
-import corsList from "./cors.js";
-
-//routers
-import systemData from "../routes/system.js"
+// Routers
+import systemData from "../routes/system.js";
 import login from "../routes/login.js";
 import userData from "../routes/userData.js";
 import municipalities from "../routes/getMunicipalities.js";
-import system from "../routes/system.js";
 import auditFields from "../routes/manage/auditFields.js";
 import newField from "../routes/manage/newField.js";
 import field from "../routes/info/field.js";
@@ -38,8 +35,8 @@ import areaDraftList from "../routes/info/areaDraftList.js";
 import localeList from "../routes/info/locale.js";
 import newLocale from "../routes/manage/newLocale.js";
 import archive from "../routes/update/archiveArea.js";
-import userList from "../routes/info/users.js"
-import fileUpload from "../routes/manage/files.js"
+import userList from "../routes/info/users.js";
+import fileUpload from "../routes/manage/files.js";
 
 const port = process.env.NODE_PORT || 3000;
 
@@ -47,20 +44,21 @@ const app = express();
 
 const corsOptions = {
     origin: "https://audit-tracker-admin.onrender.com",
-    credential: true,
-    optionSuccessStatus:200
-}
+    credentials: true,  // Corrected from 'credential' to 'credentials'
+    optionsSuccessStatus: 200
+};
 
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'client/dist')));
 
+// API Routes
 app.use("/system", systemData);
 app.use("/auth", login);
 app.use("/auth", userData);
 app.use("/data", municipalities);
-app.use("/data", system);
 app.use("/data", auditFields);
 app.use("/data", newField);
 app.use("/data", field);
@@ -85,10 +83,14 @@ app.use("/data", areaDraftList);
 app.use("/data", localeList);
 app.use("/data", newLocale);
 app.use("/data", archive);
-app.use("/data", userList)
-app.use("/data", fileUpload)
+app.use("/data", userList);
+app.use("/data", fileUpload);
 
-app.listen(port, () => {
-    console.log("Listening on port:", port);
+// Serve the index.html for all non-API routes
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client/dist/index.html'));
 });
 
+app.listen(port, () => {
+    console.log(`Listening on port: ${port}`);
+});

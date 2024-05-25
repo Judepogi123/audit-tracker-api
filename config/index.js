@@ -3,6 +3,8 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 import path from "path";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
 dotenv.config();
 
@@ -38,13 +40,16 @@ import archive from "../routes/update/archiveArea.js";
 import userList from "../routes/info/users.js";
 import fileUpload from "../routes/manage/files.js";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 const port = process.env.NODE_PORT || 3000;
 
 const app = express();
 
 const corsOptions = {
     origin: "https://audit-tracker-admin.onrender.com",
-    credentials: true,  // Corrected from 'credential' to 'credentials'
+    credentials: true,
     optionsSuccessStatus: 200
 };
 

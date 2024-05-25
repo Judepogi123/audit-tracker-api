@@ -46,7 +46,7 @@ const port = process.env.NODE_PORT || 3000;
 const app = express();
 
 const corsOptions = {
-    origin: "https://audit-tracker-admin.onrender.com/",
+    origin: "https://audit-tracker-admin.onrender.com",
     credential: true,
     optionSuccessStatus:200
 }

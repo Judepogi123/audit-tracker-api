@@ -56,10 +56,6 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get("/", ()=>{
-    console.log("Hahaha");
-})
-
 app.use("/system", systemData);
 app.use("/auth", login);
 app.use("/auth", userData);

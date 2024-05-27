@@ -2,9 +2,6 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import dotenv from "dotenv";
-import path from "path";
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
 
 dotenv.config();
 
@@ -40,9 +37,6 @@ import archive from "../routes/update/archiveArea.js";
 import userList from "../routes/info/users.js";
 import fileUpload from "../routes/manage/files.js";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
 const port = process.env.NODE_PORT || 3000;
 
 const app = express();
@@ -57,7 +51,6 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'client/dist')));
 
 // API Routes
 app.use("/system", systemData);
@@ -90,11 +83,6 @@ app.use("/data", newLocale);
 app.use("/data", archive);
 app.use("/data", userList);
 app.use("/data", fileUpload);
-
-// Serve the index.html for all non-API routes
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client/dist/index.html'));
-});
 
 app.listen(port, () => {
     console.log(`Listening on port: ${port}`);

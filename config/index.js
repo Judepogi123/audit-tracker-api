@@ -42,12 +42,12 @@ const port = process.env.NODE_PORT || 3000;
 const app = express();
 
 const corsOptions = {
-    origin: "https://audit-tracker-admin.onrender.com",
+    origin: "https://audit-tracker-admin.firebaseapp.com",
     credentials: true,
     optionsSuccessStatus: 200
 };
 
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

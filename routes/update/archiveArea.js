@@ -79,7 +79,6 @@ router.post("/unarchive-compliance", async (req, res) => {
   try {
     await Promise.all(
       Object.values(data).map(async (item) => {
-        console.log("Item:", item);
         await update(ref(database, `Compliance/${item[1]}/${item[0]}`), {
           archived: false,
         });
@@ -97,7 +96,6 @@ router.post("/unarchive-compliance", async (req, res) => {
 
 router.post("/delete-compliance", async (req, res) => {
   const request = req.body;
-
   const data = await handleGetKey(request.dataList)
   if(!request)return
   try {
@@ -109,6 +107,23 @@ router.post("/delete-compliance", async (req, res) => {
     );
     res.status(200).json({ message: `Success` });
 
+  } catch (error) {
+    res.status(500).json({ message: `Internal server error: ${error}` });
+  }
+});
+
+router.post("/delete-area", async (req, res) => {
+  const request = req.body;
+  const data = await handleGetKey(request.dataList)
+  if(!request)return
+  try {
+    await Promise.all(
+      Object.values(data).map(async (item) => {
+        const complianceRef = ref(database, `System/auditInfo/fields/${item}`)
+        await remove(complianceRef)
+      })
+    );
+    res.status(200).json({ message: `Success` });
   } catch (error) {
     res.status(500).json({ message: `Internal server error: ${error}` });
   }

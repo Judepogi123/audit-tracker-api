@@ -24,13 +24,17 @@ router.get("/drafted-area", async (req, res) => {
 
 router.delete("/delete-drafted", async (req, res) => {
   const { id } = req.query;
-  
   if (!id) {
     return res.status(400).json({ message: "Bad Request: Missing id parameter" });
   }
 
   try {
     const dataRef = ref(database, `System/auditInfo/draft/area/${id}`);
+    const snapshot  =await get(dataRef)
+    if(!snapshot.exists()){
+      res.status(404).json({message: "Item not found!"})
+      return
+    }
     await remove(dataRef);
     res.status(200).json({ message: "Success" });
   } catch (error) {

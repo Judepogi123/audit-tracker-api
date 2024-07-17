@@ -4,10 +4,6 @@ import {
   doc,
   setDoc,
   getDoc,
-  set,
-  get,
-  ref,
-  storage,
 } from "../../firebase/dbConfig.js";
 import argon from "argon2";
 import CryptoJS from "crypto-js";

@@ -2,6 +2,7 @@ import express from "express";
 import { firestore, getDoc, doc, updateDoc } from "../firebase/dbConfig.js";
 import argon from "argon2";
 import jwt from "jsonwebtoken";
+import CryptoJS from "crypto-js";
 
 const router = express.Router();
 router.use(express.json());
@@ -15,29 +16,34 @@ const handleAdminHashing = async (password) => {
     throw new Error(error);
   }
 };
+const handleHashing = async(pass) => {
+  try {
+    const hashed = CryptoJS.MD5(pass);
+    return `${hashed}`;
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Error hashing password")
+  }
+};
+
 
 const handleGetUser = async (username, password) => {
   try {
-    //console.log(`Fetching user: ${username}`);
     const userDoc = doc(firestore, "user_data", username);
     const userDocSnapshot = await getDoc(userDoc);
 
     if (!userDocSnapshot.exists()) {
-      //console.log("User does not exist");
       return "invalidUsername";
     }
 
     const userData = userDocSnapshot.data();
     if (!userData) {
-      //console.log("No user data found");
       return "invalidUsername";
     }
     if (userData.userIsArchived) {
-      //console.log("User is archived");
       return "archived";
     }
     if (userData.userLocaleType !== "provincial") {
-      //console.log("User locale type is not provincial");
       return "notFound";
     }
 
@@ -51,10 +57,8 @@ const handleGetUser = async (username, password) => {
     }
 
     const token = jwt.sign({ userName }, jwtSecret, { expiresIn: "1h" });
-    //console.log(`Generated token for ${userName}: ${token}`);
     return { username: userName, token };
   } catch (error) {
-    //console.error(`Error in handleGetUser: ${error}`);
     throw new Error(`Error: ${error}`);
   }
 };
@@ -103,32 +107,28 @@ router.post("/login", async (req, res) => {
 
     const { username: validUsername, token } = loginStatus;
     if (!token) {
-      console.log("No token generated");
       res.status(500).json({ message: "No token generated", status: false });
       return;
     }
-    //console.log(`Sending token for ${validUsername}: ${token}`);
     res
       .status(200)
       .json({ message: "Success", username: validUsername, token });
   } catch (error) {
-    //console.error(`Error in /login route: ${error}`);
     res.status(500).json({ message: "Server error" });
   }
 });
 
 router.post("/reset-password", async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password,userType } = req.body;
   if (!username || !password) {
     return res.status(400).json({ message: "Username and password are required", status: "failed" });
   }
-console.log(password);
   try {
     const userRef = doc(firestore, `user_data`,username);
     const snapshot = await getDoc(userRef);
 
     if (snapshot.exists()) {
-      const newPassword = await handleAdminHashing(password);
+      const newPassword = userType === "headAdmin"? await handleAdminHashing(password) : await handleHashing(password);
       await updateDoc(userRef, { userPassword: newPassword});
 
       return res.status(200).json({ message: "Password reset successful", status: "ok" });

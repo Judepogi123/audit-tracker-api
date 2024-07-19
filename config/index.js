@@ -42,7 +42,7 @@ const port = process.env.NODE_PORT || 3000;
 const app = express();
 
 const corsOptions = {
-    origin: "https://audit-tracker-admin.firebaseapp.com",
+    origin: "https://dilg-audit-tracker-admin.firebaseapp.com",
     credentials: true,
     optionsSuccessStatus: 200
 };
